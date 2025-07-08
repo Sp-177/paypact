@@ -1,23 +1,17 @@
 import React, { useState } from 'react';
 import video from '../assets/video.mp4';
 import TypingHero from '../components/ui/TypingHero';
-import {
-  FaLinkedin,
-  FaYahoo,
-  FaFacebook,
-  FaXTwitter,
-  FaApple,
-  FaEnvelope,
-  FaGoogle,
-  FaMicrosoft,
-} from 'react-icons/fa6';
+import logo from '../assets/logo.png';
+
+import SignIn from '../components/ui/SignIn';
+import SignUp from '../components/SignUp';
 
 export default function Landing() {
-  const [method, methodChange] = useState('Signin');
+  const [method, methodChange] = useState('SignIn');
 
   return (
     <div className="w-full h-screen flex bg-black text-white font-sans">
-      {/* Left side – Video with overlayed TypingHero */}
+      {/* Left Side – Video + TypingHero */}
       <div className="w-1/2 h-full relative overflow-hidden rounded-r-3xl">
         <video
           src={video}
@@ -27,35 +21,32 @@ export default function Landing() {
           playsInline
           className="w-full h-full object-cover"
         />
-        <div className="absolute top-[75%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-10">
+        <div className="absolute top-[75%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
           <TypingHero />
         </div>
       </div>
 
-      {/* Right side – Branding + Auth Buttons */}
-      <div className="w-1/2 h-full flex flex-col justify-center items-center px-8 space-y-8">
-        <h1 className="text-5xl font-bold tracking-wide">PayPact</h1>
-        <h3 className="text-lg font-medium text-gray-300">{method}</h3>
+      {/* Right Side – Branding + Form */}
+      <div className="w-1/2 h-full flex flex-col justify-center items-center px-8 space-y-6">
+        <img
+          src={logo}
+          alt="PayPact Logo"
+          className="w-60 mb-2 filter invert brightness-200"
+        />
 
-        <div className="grid grid-cols-2 gap-4 w-full max-w-sm">
-          {[FaGoogle, FaMicrosoft, FaLinkedin, FaYahoo, FaFacebook, FaXTwitter, FaApple, FaEnvelope].map((Icon, i) => (
-            <button
-              key={i}
-              className="flex items-center justify-center p-3 border border-white rounded-lg hover:bg-white hover:text-black transition"
-            >
-              <Icon size={22} />
-            </button>
-          ))}
-        </div>
+        <h3 className="text-xl font-semibold text-gray-200">{method}</h3>
 
-        {/* Toggle Link */}
+        {method === 'SignIn' ? <SignIn /> : <SignUp />}
+
         <div className="text-sm text-gray-400">
-          {method === 'Signin' ? 'Create new account? ' : 'Already have an account? '}
+          {method === 'SignIn' ? 'Create new account? ' : 'Already have an account? '}
           <button
-            onClick={() => methodChange(method === 'Signin' ? 'Signup' : 'Signin')}
+            onClick={() =>
+              methodChange(method === 'SignIn' ? 'SignUp' : 'SignIn')
+            }
             className="underline text-white hover:text-gray-200 transition"
           >
-            {method === 'Signin' ? 'Signup' : 'Signin'}
+            {method === 'SignIn' ? 'SignUp' : 'SignIn'}
           </button>
         </div>
       </div>
