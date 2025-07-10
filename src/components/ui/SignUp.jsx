@@ -5,37 +5,38 @@ import { z } from 'zod';
 
 const schema = z.object({
   email: z.string().email('Invalid email').min(1, 'Email is required'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  countryCode: z.string().regex(/^\+\d{1,4}$/, 'e.g. +91'),
-  phone: z.string().regex(/^\d{6,14}$/, '6–14 digits only'),
+  phone: z
+    .string()
+    .regex(/^[6-9]\d{9}$/, 'Phone must be 10 digits starting with 6–9'),
 });
 
-export default function SignUp() {
+export default function SignUp({ setOtpSent }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: { countryCode: '+91' },
   });
 
   const onSubmit = (data) => {
-    console.log('SignUp Data:', {
-      ...data,
-      fullPhone: `${data.countryCode} ${data.phone}`,
-    });
+    const fullPhone = `+91 ${data.phone}`;
+    console.log('SignUp Data:', { ...data, fullPhone });
+    setOtpSent(true);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm space-y-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full max-w-sm space-y-5"
+    >
       <div>
-        <label className="block text-sm mb-1">Email</label>
+        <label className="block text-sm text-gray-300 mb-1">Email</label>
         <input
           type="email"
           {...register('email')}
           placeholder="you@example.com"
-          className="w-full p-2 rounded border bg-black text-white placeholder-gray-400"
+          className="w-full p-2 rounded border bg-black text-white placeholder-gray-400 focus:outline-none focus:border-blue-400"
         />
         {errors.email && (
           <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
@@ -43,37 +44,21 @@ export default function SignUp() {
       </div>
 
       <div>
-        <label className="block text-sm mb-1">Password</label>
-        <input
-          type="password"
-          {...register('password')}
-          placeholder="••••••••"
-          className="w-full p-2 rounded border bg-black text-white placeholder-gray-400"
-        />
-        {errors.password && (
-          <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
-        )}
-      </div>
-
-      <div>
-        <label className="block text-sm mb-1">Phone Number</label>
+        <label className="block text-sm text-gray-300 mb-1">Mobile Number</label>
         <div className="flex gap-2">
           <input
-            type="text"
-            {...register('countryCode')}
-            className="w-1/3 p-2 rounded border bg-black text-white placeholder-gray-400"
-            placeholder="+91"
+            value="+91"
+            disabled
+            readOnly
+            className="w-1/3 p-2 rounded border bg-black text-white text-center"
           />
           <input
             type="tel"
             {...register('phone')}
-            className="w-2/3 p-2 rounded border bg-black text-white placeholder-gray-400"
             placeholder="9876543210"
+            className="w-2/3 p-2 rounded border bg-black text-white placeholder-gray-400 focus:outline-none focus:border-blue-400"
           />
         </div>
-        {errors.countryCode && (
-          <p className="text-red-500 text-xs mt-1">{errors.countryCode.message}</p>
-        )}
         {errors.phone && (
           <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
         )}
